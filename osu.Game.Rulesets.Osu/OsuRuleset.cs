@@ -55,6 +55,14 @@ namespace osu.Game.Rulesets.Osu
 
         public override ScoreProcessor CreateScoreProcessor() => new OsuScoreProcessor();
 
+        public ScoreProcessor CreateScoreProcessor(IReadOnlyList<Mod> mods)
+        {
+            if (mods.Any(m => m is OsuModTournamentScoring))
+                return new OsuTournamentScoreProcessor();
+
+            return new OsuScoreProcessor();
+        }
+
         public override HealthProcessor CreateHealthProcessor(double drainStartTime) => new OsuHealthProcessor(drainStartTime);
 
         public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => new OsuBeatmapConverter(beatmap, this);
@@ -189,7 +197,9 @@ namespace osu.Game.Rulesets.Osu
                         new OsuModClassic(),
                         new OsuModRandom(),
                         new OsuModMirror(),
-                        new MultiMod(new OsuModAlternate(), new OsuModSingleTap())
+                        new OsuModAlternate(),
+                        new OsuModSingleTap(),
+                        new OsuModTournamentScoring(),
                     };
 
                 case ModType.Automation:

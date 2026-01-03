@@ -9,6 +9,7 @@ using osu.Framework.Audio.Sample;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Online.API.Requests.Responses;
+using osu.Game.Scoring;
 using osu.Game.Users.Drawables;
 using osuTK;
 
@@ -20,6 +21,7 @@ namespace osu.Game.Screens.Ranking.Expanded
     public partial class ExpandedPanelTopContent : CompositeDrawable
     {
         private readonly APIUser user;
+        private readonly ScoreInfo score;
 
         private Sample appearanceSample;
 
@@ -29,10 +31,12 @@ namespace osu.Game.Screens.Ranking.Expanded
         /// Creates a new <see cref="ExpandedPanelTopContent"/>.
         /// </summary>
         /// <param name="user">The <see cref="APIUser"/> to display.</param>
-        /// <param name="playAppearanceSound">Whether the appearance sample should play</param>
-        public ExpandedPanelTopContent(APIUser user, bool playAppearanceSound = false)
+        /// <param name="score">The <see cref="ScoreInfo"/> for combo indicator.</param>
+        /// <param name="playAppearanceSound">Whether appearance sample should play</param>
+        public ExpandedPanelTopContent(APIUser user, ScoreInfo score, bool playAppearanceSound = false)
         {
             this.user = user;
+            this.score = score;
             this.playAppearanceSound = playAppearanceSound;
             Anchor = Anchor.TopCentre;
             Origin = Anchor.Centre;
@@ -60,10 +64,25 @@ namespace osu.Game.Screens.Ranking.Expanded
                         CornerExponent = 2.5f,
                         Masking = true,
                     },
-                    new ClickableUsername(user)
+                    new Container
                     {
+                        AutoSizeAxes = Axes.Both,
                         Anchor = Anchor.TopCentre,
                         Origin = Anchor.TopCentre,
+                        Children = new Drawable[]
+                        {
+                            new ClickableUsername(user)
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                            },
+                            score != null ? new ComboIndicator(score)
+                            {
+                                Anchor = Anchor.CentreRight,
+                                Origin = Anchor.CentreRight,
+                                Margin = new MarginPadding { Left = 10 }
+                            } : Empty()
+                        }
                     }
                 }
             };

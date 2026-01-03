@@ -8,7 +8,9 @@ using osu.Framework.Graphics.Shapes;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Online.Leaderboards;
+using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
+using osu.Game.Screens.Ranking.Expanded;
 using osuTK;
 using osuTK.Graphics;
 
@@ -20,14 +22,16 @@ namespace osu.Game.Screens.Ranking.Expanded.Accuracy
     public partial class RankText : CompositeDrawable
     {
         private readonly ScoreRank rank;
+        private readonly ScoreInfo? score;
 
         private BufferedContainer flash = null!;
         private BufferedContainer superFlash = null!;
         private GlowingSpriteText rankText = null!;
 
-        public RankText(ScoreRank rank)
+        public RankText(ScoreRank rank, ScoreInfo? score = null)
         {
             this.rank = rank;
+            this.score = score;
 
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
@@ -39,6 +43,25 @@ namespace osu.Game.Screens.Ranking.Expanded.Accuracy
         [BackgroundDependencyLoader]
         private void load()
         {
+            // Determine what text to display
+            string displayText;
+
+            if (score != null)
+            {
+                var comboStatus = ComboIndicator.getComboStatus(score);
+                var (_, comboText) = ComboIndicator.getComboDisplay(comboStatus);
+
+                // Show combo status instead of grade if applicable
+                if (!string.IsNullOrEmpty(comboText))
+                    displayText = comboText;
+                else
+                    displayText = DrawableRank.GetRankLetter(rank);
+            }
+            else
+            {
+                displayText = DrawableRank.GetRankLetter(rank);
+            }
+
             InternalChildren = new Drawable[]
             {
                 rankText = new GlowingSpriteText
@@ -47,7 +70,7 @@ namespace osu.Game.Screens.Ranking.Expanded.Accuracy
                     Origin = Anchor.Centre,
                     GlowColour = OsuColour.ForRank(rank),
                     Spacing = new Vector2(-15, 0),
-                    Text = DrawableRank.GetRankLetter(rank),
+                    Text = displayText,
                     Font = OsuFont.Numeric.With(size: 76),
                     UseFullGlyphHeight = false
                 },
@@ -87,7 +110,7 @@ namespace osu.Game.Screens.Ranking.Expanded.Accuracy
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                             Spacing = new Vector2(-15, 0),
-                            Text = DrawableRank.GetRankLetter(rank),
+                            Text = displayText,
                             Font = OsuFont.Numeric.With(size: 76),
                             UseFullGlyphHeight = false,
                             Shadow = false

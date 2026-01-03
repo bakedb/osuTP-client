@@ -190,7 +190,7 @@ namespace osu.Game.Screens.Ranking.Expanded.Accuracy
                         new RankBadge(accuracyX, accuracyX, getRank(ScoreRank.X)),
                     }
                 },
-                rankText = new RankText(score.Rank)
+                rankText = new RankText(score.Rank, score)
             };
 
             if (isFailedSDueToMisses)

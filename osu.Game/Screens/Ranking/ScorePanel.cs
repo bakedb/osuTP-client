@@ -251,7 +251,7 @@ namespace osu.Game.Screens.Ranking
                     middleLayerBackground.FadeColour(expanded_middle_layer_colour, RESIZE_DURATION, Easing.OutQuint);
 
                     bool firstLoad = topLayerContent == null;
-                    topLayerContentContainer.Add(topLayerContent = new ExpandedPanelTopContent(Score.User, firstLoad) { Alpha = 0 });
+                    topLayerContentContainer.Add(topLayerContent = new ExpandedPanelTopContent(Score.User, Score, firstLoad) { Alpha = 0 });
                     middleLayerContentContainer.Add(middleLayerContent = new ExpandedPanelMiddleContent(Score, displayWithFlair) { Alpha = 0 });
 
                     // only the first expanded display should happen with flair.
