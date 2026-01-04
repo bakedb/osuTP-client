@@ -157,7 +157,7 @@ namespace osu.Game.Screens.Menu
                             {
                                 skinEditor?.Show();
                             },
-                            OnSolo = loadSongSelect,
+                            OnSolo = () => this.Push(new SoloSongSelect()),
                             OnMultiplayer = () => this.Push(new Multiplayer()),
                             OnMatchmaking = joinOrLeaveMatchmakingQueue,
                             OnPlaylists = () => this.Push(new Playlists()),
@@ -327,13 +327,8 @@ namespace osu.Game.Screens.Menu
 
         private void displayLoginIfApplicable()
         {
-            if (loginDisplayed.Value) return;
-
-            if (!api.IsLoggedIn || api.State.Value == APIState.RequiresSecondFactorAuth)
-            {
-                Scheduler.AddDelayed(() => login?.Show(), 500);
-                loginDisplayed.Value = true;
-            }
+            // Skip login overlay and go directly to solo song select
+            this.Push(new SoloSongSelect());
         }
 
         protected override void LogoSuspending(OsuLogo logo)

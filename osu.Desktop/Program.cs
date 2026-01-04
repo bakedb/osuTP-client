@@ -138,7 +138,7 @@ namespace osu.Desktop
                     host.Run(new TournamentGame());
                 else
                 {
-                    host.Run(new OsuGameDesktop(args)
+                    host.Run(new TPOsuGameDesktop(args)
                     {
                         IsFirstRun = isFirstRun
                     });

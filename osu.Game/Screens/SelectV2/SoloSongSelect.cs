@@ -139,7 +139,7 @@ namespace osu.Game.Screens.SelectV2
                 }
                 else
                 {
-                    player = new SoloPlayer();
+                    player = new TPSoloPlayer();
                 }
 
                 return player;

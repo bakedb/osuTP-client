@@ -10,12 +10,16 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.LocalisationExtensions;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
+using osu.Framework.Input;
+using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
 using osu.Framework.Threading;
+using osu.Framework.Utils;
 using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.Drawables;
 using osu.Game.Collections;
@@ -40,7 +44,6 @@ namespace osu.Game.Screens.SelectV2
 
         public Bindable<HashSet<BeatmapInfo>?> VisibleBeatmaps { get; } = new Bindable<HashSet<BeatmapInfo>?>();
 
-        private Box chevronBackground = null!;
         private PanelSetBackground setBackground = null!;
         private ScheduledDelegate? scheduledBackgroundRetrieval;
 
@@ -48,6 +51,11 @@ namespace osu.Game.Screens.SelectV2
         private OsuSpriteText artistText = null!;
         private Drawable chevronIcon = null!;
         private PanelUpdateBeatmapButton updateButton = null!;
+
+        // Select-style colors for consistency
+        private static readonly Color4 select_blue = new Color4(0.4f, 0.8f, 1f, 1f); // #66CCFF
+        private static readonly Color4 select_green = new Color4(0.4f, 1f, 0.4f, 1f); // #66FF66
+        private static readonly Color4 select_orange = new Color4(1f, 0.667f, 0.4f, 1f); // #FFAA66
         private BeatmapSetOnlineStatusPill statusPill = null!;
         private SpreadDisplay spreadDisplay = null!;
 
@@ -84,6 +92,8 @@ namespace osu.Game.Screens.SelectV2
         public PanelBeatmapSet()
         {
             PanelXOffset = 20f;
+            Masking = true;
+            // Remove Select-style visual effects for cleaner look
         }
 
         [BackgroundDependencyLoader]
@@ -105,11 +115,21 @@ namespace osu.Game.Screens.SelectV2
                 },
             };
 
-            Background = chevronBackground = new Box
+            Background = new Container
             {
                 RelativeSizeAxes = Axes.Both,
-                Colour = Color4.White,
-                Alpha = 0f,
+                Children = new Drawable[]
+                {
+                    // Simple gradient like original Select screenshot
+                    new Box
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = ColourInfo.GradientHorizontal(
+                            new Color4(0.05f, 0.05f, 0.05f, 1f), // Very dark gray
+                            new Color4(0.15f, 0.15f, 0.15f, 1f)  // Light gray
+                        ),
+                    },
+                }
             };
 
             Content.Children = new Drawable[]
@@ -126,11 +146,13 @@ namespace osu.Game.Screens.SelectV2
                     {
                         titleText = new OsuSpriteText
                         {
-                            Font = OsuFont.Style.Heading1.With(typeface: Typeface.TorusAlternate),
+                            Font = OsuFont.Style.Heading1.With(typeface: Typeface.Torus, weight: FontWeight.Bold, size: 22), // Select-style Torus typeface
+                            Colour = new Color4(0.9f, 0.9f, 0.9f, 1f), // Light gray text like Select screenshot
                         },
                         artistText = new OsuSpriteText
                         {
-                            Font = OsuFont.Style.Body.With(weight: FontWeight.SemiBold),
+                            Font = OsuFont.Style.Body.With(typeface: Typeface.Torus, weight: FontWeight.SemiBold, size: 17), // Select-style Torus typeface
+                            Colour = new Color4(0.7f, 0.7f, 0.7f, 1f), // Medium gray text like Select screenshot
                         },
                         new FillFlowContainer
                         {
@@ -179,13 +201,11 @@ namespace osu.Game.Screens.SelectV2
         {
             if (Expanded.Value)
             {
-                chevronBackground.FadeIn(DURATION / 2, Easing.OutQuint);
                 chevronIcon.ResizeWidthTo(18, DURATION * 1.5f, Easing.OutElasticQuarter);
                 chevronIcon.FadeTo(1f, DURATION, Easing.OutQuint);
             }
             else
             {
-                chevronBackground.FadeOut(DURATION, Easing.OutQuint);
                 chevronIcon.ResizeWidthTo(0f, DURATION, Easing.OutQuint);
                 chevronIcon.FadeTo(0f, DURATION, Easing.OutQuint);
             }

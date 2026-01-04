@@ -193,13 +193,13 @@ namespace osu.Game.Rulesets.Osu
                     return new Mod[]
                     {
                         new OsuModTargetPractice(),
-                        new OsuModDifficultyAdjust(),
-                        new OsuModClassic(),
+                        new OsuModTournamentScoring(),
+                        new OsuModTPRelax(),
                         new OsuModRandom(),
                         new OsuModMirror(),
-                        new OsuModAlternate(),
-                        new OsuModSingleTap(),
-                        new OsuModTournamentScoring(),
+                        new OsuModWiggle(),
+                        new OsuModTransform(),
+                        new OsuModTraceable(),
                     };
 
                 case ModType.Automation:

@@ -14,6 +14,10 @@ A free-to-win rhythm game. Rhythm is just a *click* away!
 
 This is the future – and final – iteration of the [osu!](https://osu.ppy.sh) game client which marks the beginning of an open era! Currently known by and released under the release codename "*lazer*". As in sharper than cutting-edge.
 
+# NOTICE
+
+This project is not related to the official osu! project. It is a private project created by a single person for personal use. Get the actual osu! client [here](https://osu.ppy.sh/home/download).
+
 ## Status
 
 This project is under constant development, but we do our best to keep things in a stable state. Players are encouraged to install from a release alongside their stable *osu!* client. This project will continue to evolve until we eventually reach the point where most users prefer it over the previous "osu!stable" release.
